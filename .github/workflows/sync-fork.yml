@@ -23,6 +23,16 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+          token: ${{ secrets.SYNC_PAT }}
+
+      - name: Verify PAT secret
+        env:
+          SYNC_PAT: ${{ secrets.SYNC_PAT }}
+        run: |
+          if [ -z "${SYNC_PAT:-}" ]; then
+            echo "::error::repository secret SYNC_PAT is missing; GITHUB_TOKEN cannot push workflow files"
+            exit 1
+          fi
 
       - name: Sync default branch
         run: |
